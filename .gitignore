@@ -1,0 +1,4 @@
+smart_parking
+smart_parking.exe
+*.o
+.vscode/
