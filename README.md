@@ -1,170 +1,141 @@
-# Smart Parking Management System (C)
+# Smart Parking Management System
 
-A console-based Smart Parking Management System written in C.
+A local web-based parking management system developed in C++.
 
-## Assignment Overview
+## System overview
 
-The system manages a five-floor parking building with:
+The system manages 200 parking spaces in a five-floor facility. Each floor contains Wing A and Wing B. Each wing contains 20 spaces.
 
-- 5 floors (Ground Floor is represented as Floor 1)
-- 2 wings per floor: Wing A and Wing B
-- 20 parking slots per wing
-- 200 total parking slots
+The system provides:
 
-## Features
+- Live parking availability
+- Automatic parking space allocation
+- Vehicle entry registration
+- Vehicle exit registration
+- Parking duration calculation
+- Automatic fee calculation
+- Vehicle search
+- Parking history
+- Local data storage
+- Offline web operation through localhost
 
-- View available parking spaces before entry
-- Display availability by floor and wing
-- Automatically assign the first available parking slot
-- Record vehicle registration number and entry time
-- Prevent duplicate entry of a vehicle already inside
-- Search for currently parked vehicles
-- Record vehicle exit time
-- Calculate parking duration
-- Calculate parking charges
-- Release slots automatically on exit
-- Increment and decrement available slots
-- Display occupied slots
-- Track total completed parking sessions and revenue
+## Parking layout
 
-## Parking Fee Policy
+- 5 floors
+- 2 wings per floor
+- 20 spaces per wing
+- 40 spaces per floor
+- 200 spaces in total
 
-| Parking Duration | Charge |
+A space is identified using a code such as `1A05` or `5B20`.
+
+## Parking fees
+
+| Duration | Fee |
 |---|---:|
-| Less than 1 hour | FREE |
-| Exactly 1 hour | KSh 50 |
-| More than 1 hour | KSh 50 per started hour |
+| Up to 30 minutes | Free |
+| Up to 2 hours | KSh 50 |
+| Up to 4 hours | KSh 100 |
+| Up to 6 hours | KSh 300 |
+| Over 6 hours | KSh 500 |
 
-Examples:
+The system rounds seconds up to the next whole minute when calculating the final parking duration.
 
-- 59 minutes = FREE
-- 1 hour = KSh 50
-- 1 hour 1 minute = KSh 100
-- 2 hours = KSh 100
-- 2 hours 1 minute = KSh 150
+## Technology
 
-## Project Structure
+- C++
+- HTML
+- CSS
+- JavaScript
+- Local C++ HTTP server
+- Local file-based database
+
+No online database or web hosting service is required.
+
+## Local database
+
+The program creates `storage/parking.db` automatically. The file is stored on the local computer and contains the parking spaces and completed parking records.
+
+The database is a small binary data store implemented in C++. It is designed specifically for this system and does not require a separate database server.
+
+## Folder structure
 
 ```text
-smart-parking-system-c/
+smart-parking-system-cpp/
 ├── include/
 │   ├── config.h
-│   ├── input.h
+│   ├── database.h
+│   ├── http_server.h
 │   ├── models.h
 │   ├── parking.h
 │   └── utils.h
-│
 ├── src/
-│   ├── input.c
-│   ├── main.c
-│   ├── parking.c
-│   └── utils.c
-│
+│   ├── database.cpp
+│   ├── http_server.cpp
+│   ├── main.cpp
+│   ├── parking.cpp
+│   └── utils.cpp
+├── web/
+│   ├── index.html
+│   ├── script.js
+│   └── style.css
+├── storage/
+│   └── parking.db
+├── docs/
 ├── .gitignore
 ├── Makefile
 └── README.md
 ```
 
-## Data Structure
+## How the modules work together
 
-The building is represented using a three-dimensional array:
+`main.cpp` starts the application and connects the database to the parking system and local web server.
 
-```c
-ParkingSlot slots[5][2][20];
-```
+`parking.cpp` contains the main parking operations including entry assignment exit processing search and fee calculation.
 
-Meaning:
+`database.cpp` handles local storage. The program creates the database file when it does not exist and updates it after changes.
+
+`http_server.cpp` provides the local HTTP server and connects browser requests to the parking system.
+
+The files in `web/` form the user interface. JavaScript requests current data from the C++ server and updates the page without requiring an internet connection.
+
+## Running the system
+
+A C++17 compiler is required.
+
+### Windows using MinGW g++
+
+From the project folder run:
 
 ```text
-slots[FLOOR][WING][SLOT]
+g++ -std=c++17 -Wall -Wextra -Iinclude src/main.cpp src/database.cpp src/parking.cpp src/utils.cpp src/http_server.cpp -o smart_parking.exe -lws2_32
 ```
 
-Examples:
+Then run:
 
-- `slots[0][0][0]` = Floor 1, Wing A, Slot 1
-- `slots[4][1][19]` = Floor 5, Wing B, Slot 20
-
-## Slot Assignment Algorithm
-
-The system assigns the first available slot in this order:
-
-1. Floor 1 to Floor 5
-2. Wing A to Wing B
-3. Slot 1 to Slot 20
-
-Therefore, the first vehicle is assigned `1A01`.
-
-## Compile and Run
-
-### Using GCC
-
-```bash
-gcc -Wall -Wextra -Wpedantic -std=c11 -Iinclude \
-src/main.c src/parking.c src/input.c src/utils.c \
--o smart_parking
+```text
+smart_parking.exe
 ```
 
-Run:
+Open the following address in a browser:
 
-```bash
+```text
+http://localhost:8080
+```
+
+### Linux
+
+```text
+g++ -std=c++17 -Wall -Wextra -Iinclude src/main.cpp src/database.cpp src/parking.cpp src/utils.cpp src/http_server.cpp -o smart_parking
 ./smart_parking
 ```
 
-### Using Make
+Then open:
 
-```bash
-make
-make run
+```text
+http://localhost:8080
 ```
 
-## Important Design Decisions
+## Notes
 
-### Why a 3D Array?
-
-The parking building has a natural hierarchy:
-
-Floor -> Wing -> Slot
-
-Therefore:
-
-```c
-slots[FLOORS][WINGS][SLOTS_PER_WING]
-```
-
-is easier to understand than treating all 200 spaces as one flat array.
-
-### Why Structures?
-
-Each parking slot needs related information:
-
-- Occupancy status
-- Vehicle registration number
-- Entry time
-
-A `struct` keeps these values together.
-
-### Why Separate Files?
-
-The project is divided into logical modules:
-
-- `main.c` handles the program menu and flow.
-- `parking.c` contains parking operations.
-- `input.c` handles safe user input.
-- `utils.c` contains reusable formatting functions.
-- Header files expose functions and shared data structures.
-
-This makes the program easier to read, test, explain, and maintain.
-
-## Current Scope
-
-This version stores information in memory while the program is running.
-
-A future version could add:
-
-- Database storage
-- File persistence
-- User authentication
-- Payments
-- Reserved parking
-- Sensor integration
-- A graphical or web interface
+The application binds to localhost so the web interface is intended to run on the local computer. Internet access is not required for normal operation.

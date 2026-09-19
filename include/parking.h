@@ -1,42 +1,37 @@
 #ifndef PARKING_H
 #define PARKING_H
 
+#include <string>
+#include <vector>
 #include "models.h"
+#include "database.h"
 
-void initializeParkingSystem(ParkingSystem *system);
+class ParkingSystem {
+public:
+    explicit ParkingSystem(Database& database);
 
-void displayParkingAvailability(const ParkingSystem *system);
-void displayOccupiedSlots(const ParkingSystem *system);
-void searchVehicle(const ParkingSystem *system);
-void displayStatistics(const ParkingSystem *system);
+    bool initialize();
+    bool enterVehicle(const std::string& vehicleNumber, std::string& message);
+    bool exitVehicle(const std::string& vehicleNumber, ParkingTransaction& transaction, std::string& message);
+    bool findVehicle(const std::string& vehicleNumber, ParkingSlot& slot) const;
 
-void registerVehicleEntry(ParkingSystem *system);
-void registerVehicleExit(ParkingSystem *system);
+    const std::vector<ParkingSlot>& getSlots() const;
+    const std::vector<ParkingTransaction>& getTransactions() const;
+    int availableSlots() const;
+    int occupiedSlots() const;
+    int calculateFee(long long durationMinutes) const;
+    std::string slotCode(const ParkingSlot& slot) const;
+    std::string lastError() const;
 
-/*
- * Finds an occupied slot containing the vehicle number.
- * Returns 1 when found and 0 when not found.
- */
-int findVehicleLocation(
-    const ParkingSystem *system,
-    const char *vehicleNumber,
-    int *floor,
-    int *wing,
-    int *slot
-);
+private:
+    Database& database;
+    std::vector<ParkingSlot> slots;
+    std::vector<ParkingTransaction> transactions;
 
-/*
- * Finds the first available slot.
- * Assignment priority:
- * Floor 1 -> Floor 5
- * Wing A -> Wing B
- * Slot 1 -> Slot 20
- */
-int findAvailableSlot(
-    const ParkingSystem *system,
-    int *floor,
-    int *wing,
-    int *slot
-);
+    ParkingSlot* findVehicleSlot(const std::string& vehicleNumber);
+    ParkingSlot* findAvailableSlot();
+    void buildSlots();
+    void trimAndUpper(std::string& value) const;
+};
 
 #endif

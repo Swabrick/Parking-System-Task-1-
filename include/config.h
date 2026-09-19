@@ -5,11 +5,9 @@
 #define WINGS 2
 #define SLOTS_PER_WING 20
 #define TOTAL_SLOTS (FLOORS * WINGS * SLOTS_PER_WING)
-
 #define MAX_VEHICLE_NUMBER 20
-#define MAX_TRANSACTIONS 1000
-
-#define HOURLY_RATE 50.0
-#define FREE_PARKING_SECONDS 3600
+#define MAX_TRANSACTIONS 5000
+#define SERVER_PORT 8080
+#define DATABASE_FILE "storage/parking.db"
 
 #endif

@@ -1,15 +1,12 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <time.h>
+#include <ctime>
+#include <string>
 
-/* Prints a timestamp in a readable format. */
-void printFormattedTime(time_t value);
-
-/* Prints a slot code such as 1A05. */
-void printSlotCode(int floor, int wing, int slot);
-
-/* Prints duration as hours and minutes. */
-void printDuration(long durationSeconds);
+std::string formatTime(std::time_t value);
+std::string jsonEscape(const std::string& value);
+std::string urlDecode(const std::string& value);
+std::string normalizeVehicleNumber(std::string value);
 
 #endif

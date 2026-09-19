@@ -1,16 +1,15 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -Wpedantic -std=c11 -Iinclude
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall -Wextra -Iinclude
+SRC = src/main.cpp src/database.cpp src/parking.cpp src/utils.cpp src/http_server.cpp
 
-TARGET = smart_parking
-SRC = src/main.c src/parking.c src/input.c src/utils.c
+all:
+	$(CXX) $(CXXFLAGS) $(SRC) -o smart_parking
 
-all: $(TARGET)
-
-$(TARGET): $(SRC)
-	$(CC) $(CFLAGS) $(SRC) -o $(TARGET)
+windows:
+	$(CXX) $(CXXFLAGS) $(SRC) -o smart_parking.exe -lws2_32
 
 clean:
-	rm -f $(TARGET)
+	rm -f smart_parking smart_parking.exe
 
-run: $(TARGET)
-	./$(TARGET)
+run: all
+	./smart_parking

@@ -1,4 +1,6 @@
 smart_parking
 smart_parking.exe
 *.o
+*.tmp
+storage/parking.db
 .vscode/

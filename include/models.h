@@ -1,39 +1,34 @@
 #ifndef MODELS_H
 #define MODELS_H
 
-#include <time.h>
+#include <ctime>
+#include <string>
 #include "config.h"
 
-/* Represents one physical parking slot. */
-typedef struct {
-    int occupied;                               /* 0 = available, 1 = occupied */
-    char vehicleNumber[MAX_VEHICLE_NUMBER];
-    time_t entryTime;
-} ParkingSlot;
+enum class SlotStatus { Available = 0, Occupied = 1 };
 
-/* Represents a completed parking visit. */
-typedef struct {
-    char vehicleNumber[MAX_VEHICLE_NUMBER];
-    int floor;
-    int wing;
-    int slot;
-    time_t entryTime;
-    time_t exitTime;
-    long durationSeconds;
-    int chargedHours;
-    double amount;
-} ParkingTransaction;
+enum class SessionStatus { Active = 0, Completed = 1 };
 
-/* Stores the entire parking system state. */
-typedef struct {
-    ParkingSlot slots[FLOORS][WINGS][SLOTS_PER_WING];
+struct ParkingSlot {
+    int floor = 0;
+    int wing = 0;
+    int number = 0;
+    SlotStatus status = SlotStatus::Available;
+    std::string vehicleNumber;
+    std::time_t entryTime = 0;
+};
 
-    int availableSlots;
-    int totalVehiclesServed;
-    double totalRevenue;
-
-    ParkingTransaction transactions[MAX_TRANSACTIONS];
-    int transactionCount;
-} ParkingSystem;
+struct ParkingTransaction {
+    long long id = 0;
+    std::string vehicleNumber;
+    int floor = 0;
+    int wing = 0;
+    int slot = 0;
+    std::time_t entryTime = 0;
+    std::time_t exitTime = 0;
+    long long durationMinutes = 0;
+    int amount = 0;
+    SessionStatus status = SessionStatus::Completed;
+};
 
 #endif
