@@ -4,6 +4,7 @@
 #include <string>
 #include "parking.h"
 
+// Small local HTTP server used to connect the web interface to the C++ system.
 class HttpServer {
 public:
     HttpServer(ParkingSystem& parking, int port);

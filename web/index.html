@@ -7,100 +7,81 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+<!-- Main application shell and navigation. -->
 <div class="app-shell">
     <aside class="sidebar">
-        <div class="brand">
-            <div class="brand-mark">SP</div>
-            <div>
-                <strong>Smart Parking</strong>
-                <span>Management System</span>
-            </div>
-        </div>
+        <div class="brand"><div class="brand-mark">SP</div><div><strong>Smart Parking</strong><span>Management System</span></div></div>
         <nav>
             <button class="nav-item active" data-section="dashboard">Dashboard</button>
             <button class="nav-item" data-section="parking">Parking Layout</button>
-            <button class="nav-item" data-section="vehicles">Vehicles</button>
+            <button class="nav-item" data-section="vehicles">Vehicle Operations</button>
+            <button class="nav-item" data-section="live">Live Vehicles</button>
             <button class="nav-item" data-section="records">Records</button>
+            <button class="nav-item" data-section="analytics">Analytics</button>
+            <button class="nav-item" data-section="management">Management</button>
         </nav>
-        <div class="sidebar-note">
-            <span class="status-dot"></span>
-            Local system online
-            <small>No internet required</small>
-        </div>
+        <div class="sidebar-note"><span class="status-dot"></span><span>Local system online</span><small>No internet required</small></div>
     </aside>
 
     <main class="main">
+        <!-- Dashboard and operational sections are rendered in the same local page. -->
         <header class="topbar">
-            <div>
-                <p class="eyebrow">PARKING OPERATIONS</p>
-                <h1 id="pageTitle">Dashboard</h1>
-            </div>
-            <div class="topbar-right">
-                <span id="clock">--:--:--</span>
-                <span class="local-badge">LOCAL</span>
-            </div>
+            <div><p class="eyebrow">PARKING OPERATIONS</p><h1 id="pageTitle">Dashboard</h1></div>
+            <div class="topbar-right"><span id="clock">--:--:--</span><span class="local-badge">LOCAL</span></div>
         </header>
 
         <section id="dashboard" class="section active-section">
-            <div class="hero-row">
-                <div>
-                    <h2>Good day.</h2>
-                    <p>Monitor the facility and manage vehicle movement from one place.</p>
-                </div>
-                <div class="quick-actions">
-                    <button class="primary" onclick="openModal('entryModal')">Register Entry</button>
-                    <button class="secondary" onclick="openModal('exitModal')">Register Exit</button>
-                </div>
-            </div>
-
+            <div class="hero-row"><div><p class="eyebrow">CONTROL CENTRE</p><h2>Parking operations</h2><p>Monitor the facility and manage vehicle movement from one place.</p></div><div class="quick-actions"><button class="primary" onclick="openModal('entryModal')">Register Entry</button><button class="secondary" onclick="openModal('exitModal')">Register Exit</button></div></div>
             <div class="stats-grid">
                 <article class="stat-card"><span>Total spaces</span><strong id="total">200</strong><small>5 floors · 2 wings</small></article>
-                <article class="stat-card"><span>Available</span><strong id="available">200</strong><small class="positive">Ready for allocation</small></article>
-                <article class="stat-card"><span>Occupied</span><strong id="occupied">0</strong><small>Currently parked</small></article>
-                <article class="stat-card"><span>Completed visits</span><strong id="transactions">0</strong><small>Saved locally</small></article>
+                <article class="stat-card"><span>Available</span><strong id="available">200</strong><small>Ready for allocation</small></article>
+                <article class="stat-card"><span>Occupied</span><strong id="occupied">0</strong><small>Currently inside</small></article>
+                <article class="stat-card"><span>Revenue</span><strong id="revenue">KSh 0</strong><small>Collected payments</small></article>
             </div>
-
             <div class="content-grid">
-                <article class="panel large-panel">
-                    <div class="panel-head"><div><p class="eyebrow">LIVE VIEW</p><h3>Parking availability</h3></div><button class="text-button" onclick="showSection('parking')">View full layout →</button></div>
-                    <div id="miniFloors" class="mini-floors"></div>
-                </article>
-                <article class="panel">
-                    <div class="panel-head"><div><p class="eyebrow">PRICING</p><h3>Parking fees</h3></div></div>
-                    <div class="pricing-list">
-                        <div><span>Up to 30 minutes</span><strong>Free</strong></div>
-                        <div><span>Up to 2 hours</span><strong>KSh 50</strong></div>
-                        <div><span>Up to 4 hours</span><strong>KSh 100</strong></div>
-                        <div><span>Up to 6 hours</span><strong>KSh 300</strong></div>
-                        <div><span>Over 6 hours</span><strong>KSh 500</strong></div>
-                    </div>
-                </article>
+                <article class="panel large-panel"><div class="panel-head"><div><p class="eyebrow">LIVE VIEW</p><h3>Parking availability</h3></div><button class="text-button" onclick="showSection('parking')">View full layout →</button></div><div id="miniFloors" class="mini-floors"></div></article>
+                <article class="panel"><div class="panel-head"><div><p class="eyebrow">BARRIERS</p><h3>Gate status</h3></div></div><div id="barrierSummary" class="barrier-summary"></div><div class="divider"></div><div class="pricing-list" id="pricingList"></div></article>
             </div>
+            <div class="content-grid lower"><article class="panel"><div class="panel-head"><div><p class="eyebrow">ACTIVE VEHICLES</p><h3>Currently parked</h3></div><button class="text-button" onclick="showSection('live')">View live records →</button></div><div id="activePreview" class="compact-list"></div></article><article class="panel"><div class="panel-head"><div><p class="eyebrow">RECENT ACTIVITY</p><h3>Latest exits</h3></div><button class="text-button" onclick="showSection('records')">Open records →</button></div><div id="recentPreview" class="compact-list"></div></article></div>
         </section>
 
-        <section id="parking" class="section">
-            <div class="section-heading"><div><p class="eyebrow">FACILITY MAP</p><h2>Parking Layout</h2><p>Green spaces are available. Dark spaces are occupied.</p></div><div class="legend"><span><i class="available-dot"></i> Available</span><span><i class="occupied-dot"></i> Occupied</span></div></div>
-            <div id="floorLayout" class="floor-layout"></div>
-        </section>
+        <section id="parking" class="section"><div class="section-heading"><div><p class="eyebrow">FACILITY MAP</p><h2>Parking Layout</h2><p>Click a space to view its current details.</p></div><div class="legend"><span><i class="available-dot"></i> Available</span><span><i class="occupied-dot"></i> Occupied</span></div></div><div id="floorLayout" class="floor-layout"></div></section>
 
-        <section id="vehicles" class="section">
-            <div class="section-heading"><div><p class="eyebrow">VEHICLE CONTROL</p><h2>Vehicle Operations</h2><p>Register arrivals and departures using the vehicle registration number.</p></div></div>
-            <div class="operation-grid">
-                <article class="operation-card"><div class="operation-icon">IN</div><h3>Vehicle Entry</h3><p>Find the next available space and assign it automatically.</p><button class="primary full" onclick="openModal('entryModal')">Register Entry</button></article>
-                <article class="operation-card"><div class="operation-icon">OUT</div><h3>Vehicle Exit</h3><p>Calculate the parking duration and fee then release the space.</p><button class="secondary full" onclick="openModal('exitModal')">Register Exit</button></article>
-                <article class="operation-card"><div class="operation-icon">?</div><h3>Find Vehicle</h3><p>Locate a vehicle currently inside the facility.</p><div class="search-box"><input id="searchVehicle" placeholder="e.g. KDA123A"><button onclick="findVehicle()">Search</button></div><div id="searchResult" class="search-result"></div></article>
-            </div>
-        </section>
+        <section id="vehicles" class="section"><div class="section-heading"><div><p class="eyebrow">VEHICLE CONTROL</p><h2>Vehicle Operations</h2><p>Register arrivals and departures using the vehicle registration number.</p></div></div><div class="operation-grid"><article class="operation-card"><div class="operation-icon">IN</div><h3>Vehicle Entry</h3><p>Check the vehicle then assign the next available space.</p><button class="primary full" onclick="openModal('entryModal')">Register Entry</button></article><article class="operation-card"><div class="operation-icon">OUT</div><h3>Vehicle Exit</h3><p>Calculate the fee, collect payment and confirm the exit.</p><button class="secondary full" onclick="openModal('exitModal')">Register Exit</button></article><article class="operation-card"><div class="operation-icon">?</div><h3>Find Vehicle</h3><p>Locate a vehicle currently inside the facility.</p><div class="search-box"><input id="searchVehicle" placeholder="KDA 123A"><button onclick="findVehicle()">Search</button></div><div id="searchResult" class="search-result"></div></article></div></section>
 
-        <section id="records" class="section">
-            <div class="section-heading"><div><p class="eyebrow">HISTORY</p><h2>Parking Records</h2><p>Completed parking sessions stored in the local database.</p></div></div>
-            <article class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Vehicle</th><th>Slot</th><th>Entry</th><th>Exit</th><th>Duration</th><th>Amount</th></tr></thead><tbody id="recordsBody"></tbody></table></div></article>
-        </section>
+        <section id="live" class="section"><div class="section-heading"><div><p class="eyebrow">LIVE RECORD</p><h2>Vehicles in the facility</h2><p>This list refreshes automatically while the system is running.</p></div><span class="live-badge"><i></i> Live</span></div><article class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Vehicle</th><th>Space</th><th>Floor</th><th>Entry time</th><th>Time inside</th><th>Estimated fee</th><th>Status</th></tr></thead><tbody id="activeBody"></tbody></table></div></article></section>
+
+        <section id="records" class="section"><div class="section-heading"><div><p class="eyebrow">LOCAL DATABASE</p><h2>Parking Records</h2><p>Parking transactions can be reviewed and edited from here.</p></div><button class="secondary" onclick="loadRecords()">Refresh records</button></div><article class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>ID</th><th>Vehicle</th><th>Space</th><th>Entry</th><th>Exit</th><th>Duration</th><th>Amount</th><th>Payment</th><th>Action</th></tr></thead><tbody id="recordsBody"></tbody></table></div></article></section>
+
+        <section id="analytics" class="section"><div class="section-heading"><div><p class="eyebrow">REPORTING</p><h2>Analytics</h2><p>Summary information calculated from the local parking records.</p></div></div><div class="stats-grid"><article class="stat-card"><span>Total revenue</span><strong id="analyticsRevenue">KSh 0</strong><small>Collected payments</small></article><article class="stat-card"><span>Average stay</span><strong id="averageStay">0 min</strong><small>Per recorded exit</small></article><article class="stat-card"><span>Paid visits</span><strong id="paidVisits">0</strong><small>Confirmed charged sessions</small></article><article class="stat-card"><span>Pending payments</span><strong id="pendingPayments">0</strong><small>Waiting for operator confirmation</small></article></div><div class="content-grid"><article class="panel"><div class="panel-head"><div><p class="eyebrow">FLOOR USAGE</p><h3>Visits by floor</h3></div></div><div id="floorAnalytics" class="bar-chart"></div></article><article class="panel"><div class="panel-head"><div><p class="eyebrow">SESSION MIX</p><h3>Free and paid visits</h3></div></div><div id="sessionMix" class="mix-chart"></div></article></div></section>
+
+        <section id="management" class="section"><div class="section-heading"><div><p class="eyebrow">SYSTEM CONTROL</p><h2>Management</h2><p>Change rates, maintain local records and control the barriers.</p></div></div><div class="management-grid">
+            <article class="panel"><div class="panel-head"><div><p class="eyebrow">RATES</p><h3>Parking rates</h3></div></div><form id="pricingForm" class="form-grid"><label>Free limit (minutes)<input name="freeLimit" type="number" min="0"></label><label>First limit (minutes)<input name="firstLimit" type="number" min="1"></label><label>Second limit (minutes)<input name="secondLimit" type="number" min="1"></label><label>Third limit (minutes)<input name="thirdLimit" type="number" min="1"></label><label>First fee<input name="firstFee" type="number" min="0"></label><label>Second fee<input name="secondFee" type="number" min="0"></label><label>Third fee<input name="thirdFee" type="number" min="0"></label><label>Maximum fee<input name="maximumFee" type="number" min="0"></label><button class="primary" type="submit">Save Rates</button></form><div id="pricingMessage" class="form-message"></div></article>
+            <article class="panel"><div class="panel-head"><div><p class="eyebrow">BLACKLIST</p><h3>Number plate control</h3></div></div><form id="blacklistForm" class="inline-form"><input id="blacklistVehicle" placeholder="KDA 123A" maxlength="19" required><button class="secondary" type="submit">Add</button></form><div id="blacklistItems" class="tag-list"></div></article>
+            <article class="panel"><div class="panel-head"><div><p class="eyebrow">BARRIER CONTROL</p><h3>Automatic first, manual fallback</h3></div></div><p class="small-note">Automatic operation is the normal mode. Use the manual controls if the automatic barrier fails or is unavailable.</p><div id="barrierControls" class="barrier-controls"></div><div class="barrier-mode"><button class="secondary" onclick="setBarrierMode('automatic')">Automatic mode</button><button class="secondary" onclick="setBarrierMode('manual')">Manual mode</button></div></article>
+            <article class="panel"><div class="panel-head"><div><p class="eyebrow">DATABASE</p><h3>Local records</h3></div></div><p class="small-note">The database is stored locally on the computer. Record editing is available from the Parking Records page.</p><div class="database-info"><div><span>Storage</span><strong>storage/parking.db</strong></div><div><span>Mode</span><strong>Offline local</strong></div><div><span>Internet</span><strong>Not required</strong></div></div></article>
+        </div></section>
     </main>
 </div>
 
-<div id="entryModal" class="modal"><div class="modal-card"><button class="close" onclick="closeModal('entryModal')">×</button><p class="eyebrow">VEHICLE ENTRY</p><h2>Register vehicle</h2><p>Enter the registration number to assign the next available parking space.</p><form onsubmit="submitEntry(event)"><label>Vehicle registration<input id="entryVehicle" required maxlength="19" placeholder="KDA 123A"></label><button class="primary full" type="submit">Assign Parking Space</button></form><div id="entryMessage" class="form-message"></div></div></div>
-<div id="exitModal" class="modal"><div class="modal-card"><button class="close" onclick="closeModal('exitModal')">×</button><p class="eyebrow">VEHICLE EXIT</p><h2>Register exit</h2><p>The system will calculate the duration and applicable parking fee automatically.</p><form onsubmit="submitExit(event)"><label>Vehicle registration<input id="exitVehicle" required maxlength="19" placeholder="KDA 123A"></label><button class="secondary full" type="submit">Calculate & Complete Exit</button></form><div id="exitMessage" class="form-message"></div></div></div>
+<div id="entryModal" class="modal"><div class="modal-card"><button class="close" onclick="closeModal('entryModal')">×</button><p class="eyebrow">VEHICLE ENTRY</p><h2>Register vehicle</h2><p>Enter the registration number to assign the next available parking space.</p><form onsubmit="submitEntry(event)"><label>Vehicle registration<input id="entryVehicle" required maxlength="19" placeholder="KDA 123A"></label><button class="primary full" type="submit">Check and Assign Space</button></form><div id="entryMessage" class="form-message"></div></div></div>
+
+<div id="exitModal" class="modal"><div class="modal-card"><button class="close" onclick="closeModal('exitModal')">×</button><p class="eyebrow">VEHICLE EXIT</p><h2>Complete vehicle exit</h2><p>Calculate the parking fee, collect payment and confirm it before releasing the vehicle.</p><form onsubmit="submitExit(event)"><label>Vehicle registration<input id="exitVehicle" required maxlength="19" placeholder="KDA 123A"></label><button class="secondary full" type="submit">Calculate Exit</button></form><div id="exitMessage" class="form-message"></div>
+    <div id="paymentBox" class="payment-box hidden">
+        <div><span>Amount due</span><strong id="exitAmount">KSh 0</strong></div>
+        <p id="paymentInstruction">For a charged exit, collect the payment from the driver and then confirm it below.</p>
+        <div class="payment-options">
+            <button type="button" id="cashPaymentButton" onclick="selectPaymentMethod('cash')">Cash</button>
+            <button type="button" onclick="paymentComingSoon('Card')">Card</button>
+            <button type="button" onclick="paymentComingSoon('M-Pesa')">M-Pesa</button>
+        </div>
+        <div id="selectedPayment" class="small-note">No payment method selected.</div>
+        <button id="confirmPaymentButton" class="primary full" type="button" onclick="confirmPayment()">Confirm Payment Collected</button>
+        <button class="secondary full receipt-button" type="button" onclick="printReceipt()">Print Parking Receipt</button>
+    </div>
+</div></div>
+
+<div id="editModal" class="modal"><div class="modal-card"><button class="close" onclick="closeModal('editModal')">×</button><p class="eyebrow">DATABASE EDIT</p><h2>Edit transaction</h2><form id="editForm"><input type="hidden" name="id"><label>Amount<input name="amount" type="number" min="0" required></label><label>Payment status<select name="paymentStatus"><option value="paid">Paid</option><option value="pending">Pending</option></select></label><label>Payment method<select name="paymentMethod"><option value="cash">Cash</option><option value="card">Card</option><option value="mpesa">M-Pesa</option><option value="none">Not selected</option></select></label><button class="primary full" type="submit">Save Record</button></form><div id="editMessage" class="form-message"></div></div></div>
 <div id="toast" class="toast"></div>
 <script src="/script.js"></script>
 </body>

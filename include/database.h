@@ -5,15 +5,22 @@
 #include <vector>
 #include "models.h"
 
+// Handles the local binary database used by the parking system.
+// No network database or external service is required.
 class Database {
 public:
     explicit Database(const std::string& path);
 
     bool open();
     bool initialize();
-    bool load(std::vector<ParkingSlot>& slots, std::vector<ParkingTransaction>& transactions);
+    bool load(std::vector<ParkingSlot>& slots,
+              std::vector<ParkingTransaction>& transactions,
+              std::vector<std::string>& blacklist,
+              PricingSettings& pricing);
     bool save(const std::vector<ParkingSlot>& slots,
-              const std::vector<ParkingTransaction>& transactions);
+              const std::vector<ParkingTransaction>& transactions,
+              const std::vector<std::string>& blacklist,
+              const PricingSettings& pricing);
     const std::string& error() const;
 
 private:
