@@ -1,4 +1,4 @@
-# Smart Parking Management System
+# Saint Hotel Parking System
 
 A local web based parking management system developed in C++.
 

@@ -479,7 +479,7 @@ bool HttpServer::start() {
         return false;
     }
 
-    std::cout << "Smart Parking Management System running at http://localhost:" << port << "\n";
+    std::cout << "Saint Hotel Parking System running at http://localhost:" << port << "\n";
 
     while (true) {
         sockaddr_in client{};

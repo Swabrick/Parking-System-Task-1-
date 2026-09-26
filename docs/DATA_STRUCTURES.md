@@ -1,4 +1,4 @@
-# Data Structures Used in the Smart Parking Management System
+# Data Structures Used in the Saint Hotel Parking System
 
 ## 1. Overview
 
